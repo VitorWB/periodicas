@@ -15,8 +15,34 @@
 #define PORT 6325
 
 //VARIAVEIS GLOBAIS SOCKET
-int sock,length,s0;
-struct sockaddr_in server,client;
+pthread_t tid0,tid1,tid2;
+int sock,length,s0,s1,s2;
+struct sockaddr_in server;
+
+void *escutatp0(void *){
+    int mediaTemperatura;
+    while(1){
+        recv(s0, &mediaTemperatura, sizeof(mediaTemperatura), 0); 
+        printf("ALERTA, TEMPERATURA ACIMA DE 70°, MEDIA ATUAL: %d\n", mediaTemperatura);
+    }
+}
+
+void *escutatp1(void *){
+    int linferior;
+    while(1){
+        recv(s1, &linferior, sizeof(linferior), 0); 
+        printf("ALERTA DE LIMITE INFERIOR MENOR QUE 10, LIMITE INFERIOR ATUAL: %d\n", linferior);
+    }
+}
+
+void *escutatp2(void *){
+    int lsuperior;
+    while(1){
+        recv(s2, &lsuperior, sizeof(lsuperior), 0); 
+        printf("ALERTA DE LIMITE SUPERIOR MAIOR QUE 80, LIMITE SUPERIOR ATUAL: %d\n", lsuperior);
+    }
+}
+
 
 int main(){
 
@@ -42,13 +68,22 @@ int main(){
 
     //3:LISTEN
     listen(sock,5);
-    printf("SERVER: Aguardando conexão!\n");  
+    printf("SERVER: Aguardando conexões!\n");  
     //FIM LISTEN
 
     //4:ACCEPT;
-    s0 = accept(sock,(struct sockaddr *)0,0);  
-    printf("SERVER: Conexão estabelecida!\n");  
+    s0 = accept(sock,(struct sockaddr *)0,0);
+    s1 = accept(sock,(struct sockaddr *)0,0);
+    s2 = accept(sock,(struct sockaddr *)0,0);
+    printf("SERVER: Conexões estabelecidas!\n");  
     //FIM ACCEPT
 
+    pthread_create(&tid0,NULL,escutatp0,NULL);
+    pthread_create(&tid1,NULL,escutatp1,NULL);
+    pthread_create(&tid2,NULL,escutatp2,NULL);
+
+    pthread_join(tid0,NULL);
+    pthread_join(tid1,NULL);
+    pthread_join(tid2,NULL);
 
 }
