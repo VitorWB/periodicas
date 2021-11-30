@@ -13,7 +13,7 @@
 #include <sys/time.h>
 
 #define PORT 6325
-
+//VITOR WOLFF BORDIGNON
 //VARIAVEIS GLOBAIS SOCKET
 pthread_t tid0,tid1,tid2;
 int sock,length,s0,s1,s2;
@@ -23,7 +23,7 @@ void *escutatp0(void *){
     int mediaTemperatura;
     while(1){
         recv(s0, &mediaTemperatura, sizeof(mediaTemperatura), 0); 
-        printf("ALERTA, TEMPERATURA ACIMA DE 70°, MEDIA ATUAL: %d\n", mediaTemperatura);
+        printf("ALERTA DE TEMPERATURA ACIMA DE 70°, MEDIA ATUAL: %d\n", mediaTemperatura);
     }
 }
 
