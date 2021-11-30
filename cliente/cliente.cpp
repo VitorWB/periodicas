@@ -12,7 +12,9 @@
 #include <string.h>
 #include <pthread.h>
 
-#define PORT 6325
+#define PORTS0 6325
+#define PORTS1 6326
+#define PORTS2 6327
 #define IP_SERVER "172.17.0.2"
 
 //VITOR WOLFF BORDIGNON
@@ -22,9 +24,9 @@
 
 pthread_t tid0,tid1,tid2,tid3; // TREADS
 int s0, s1, s2, temperatura[10], linferior, lsuperior, Tindex = 0; 
+struct sockaddr_in server;
 
 void *tp0(void *){ // THREAD QUE GERA TEMPERATURA
-    struct sockaddr_in server;
     //1:SOCKET
     s0=socket(AF_INET, SOCK_STREAM, 0);
         if (s0<0){
@@ -36,7 +38,7 @@ void *tp0(void *){ // THREAD QUE GERA TEMPERATURA
     //2:CONEXAO COM SERVIDOR
     bzero(&server, sizeof(server)) ;
     server.sin_family = AF_INET ;
-    server.sin_port = htons(PORT) ;
+    server.sin_port = htons(PORTS0) ;
     server.sin_addr.s_addr = inet_addr(IP_SERVER);
 
     if (connect(s0, (struct sockaddr *) &server, sizeof(server))){
@@ -69,7 +71,6 @@ void *tp0(void *){ // THREAD QUE GERA TEMPERATURA
 }
 
 void *tp1(void *){ // THREAD QUE GERA LIMITE INFERIOR
-    struct sockaddr_in server;
     //1:SOCKET
     s1=socket(AF_INET, SOCK_STREAM, 0);
         if (s1<0){
@@ -81,7 +82,7 @@ void *tp1(void *){ // THREAD QUE GERA LIMITE INFERIOR
     //2:CONEXAO COM SERVIDOR
     bzero(&server, sizeof(server)) ;
     server.sin_family = AF_INET ;
-    server.sin_port = htons(PORT) ;
+    server.sin_port = htons(PORTS1) ;
     server.sin_addr.s_addr = inet_addr(IP_SERVER);
 
     if (connect(s1, (struct sockaddr *) &server, sizeof(server))){
@@ -98,7 +99,6 @@ void *tp1(void *){ // THREAD QUE GERA LIMITE INFERIOR
 }
 
 void *tp2(void *){ // THREAD QUE GERA LIMITE SUPERIOR
-    struct sockaddr_in server;
     //1:SOCKET
     s2=socket(AF_INET, SOCK_STREAM, 0);
         if (s2<0){
@@ -110,7 +110,7 @@ void *tp2(void *){ // THREAD QUE GERA LIMITE SUPERIOR
     //2:CONEXAO COM SERVIDOR
     bzero(&server, sizeof(server)) ;
     server.sin_family = AF_INET ;
-    server.sin_port = htons(PORT) ;
+    server.sin_port = htons(PORTS2) ;
     server.sin_addr.s_addr = inet_addr(IP_SERVER);
 
     if (connect(s2, (struct sockaddr *) &server, sizeof(server))){
